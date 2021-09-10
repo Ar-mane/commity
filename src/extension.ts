@@ -1,11 +1,10 @@
 import { commands, ExtensionContext } from "vscode";
 import { commity } from "./Commands/MainCommand";
+import { COMMITY_MAIN_CMD } from "./constants/Constants";
 import { initExtension } from "./UI/Components";
 
-export const COMMITY_MAIN_CMD = "armane-commity.commity";
-
 export function activate(context: ExtensionContext) {
-    initExtension(context);
+  initExtension(context);
   commands.registerCommand(COMMITY_MAIN_CMD, () => commity(context));
 }
 
