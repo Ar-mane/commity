@@ -27,5 +27,5 @@ export interface Commit {
 
 export interface CommityProject {
   id: string;
-  useDefaultConfig: string;
+  useDefaultConfig: boolean;
 }
