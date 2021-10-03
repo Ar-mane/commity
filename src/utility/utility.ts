@@ -43,14 +43,14 @@ const getDataFromUri = async (uri: Uri) => {
 export const getProjects = (): CommityProject[] =>
   (workspace.getConfiguration().get(CONFIG_PROJECTS) as CommityProject[]) || [];
 
-export const projectID = () => {
-  return workspace.rootPath;
+export const getCurrentProjectPath = () => {
+  return workspace.rootPath as string;
 };
 
 //  --- local functions //
 
 const isDefaultSettingSet = (): boolean => {
-  const pid = projectID();
+  const pid = getCurrentProjectPath();
   return !!getProjects().find((e) => e.id === pid && e.useDefaultConfig);
 };
 

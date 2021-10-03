@@ -17,7 +17,7 @@ import {
   NO_CONFIG_FOUND_MESSAGE,
 } from "../constants/Constants";
 import { log } from "../utility/logger";
-import { getProjects, projectID } from "../utility/utility";
+import { getProjects, getCurrentProjectPath } from "../utility/utility";
 
 // TODO : optimise statusbar ( icon and functionality )
 export function createStatusBar() {
@@ -54,16 +54,18 @@ const doSelect = (uri: Uri, choice: string) => {
   switch (choice) {
     case NO_CONFIG_ACTIONS_CREATE:
       cloneDefaultConfigToWorkspace(uri);
+      break;
     case NO_CONFIG_ACTIONS_DEFAULT:
       useDefaultConfigInstead();
       showUsingDefaultSettingDialog();
+      break;
     default:
       log("no choice ");
   }
 };
 const cloneDefaultConfigToWorkspace = (uri: Uri) => {
   try {
-    const json = JSON.stringify(defaultConfig);
+    const json = JSON.stringify(defaultConfig, null, 3);
     workspace.fs.writeFile(uri, Buffer.from(json));
   } catch (e) {
     log(e);
@@ -72,11 +74,21 @@ const cloneDefaultConfigToWorkspace = (uri: Uri) => {
 const useDefaultConfigInstead = async (): Promise<void> => {
   const configuration = workspace.getConfiguration();
   const projects = getProjects();
-  
-  // TODO:  remove redendances  
+  const currentProjectName = getCurrentProjectPath();
+  const currentProject = projects.findIndex((p) => p.id === currentProjectName);
+
+  if (currentProject >= 0) {
+    projects[currentProject].useDefaultConfig = true;
+  } else {
+    projects.push({
+      id: currentProjectName,
+      useDefaultConfig: true,
+    });
+  }
+
   await configuration.update(
     CONFIG_PROJECTS,
-    [...projects, { id: projectID(), useDefaultConfig: true }],
+    projects,
     ConfigurationTarget.Global
   );
 };

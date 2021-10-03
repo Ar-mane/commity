@@ -1,4 +1,5 @@
-export const FILE_NAME_IN_WORKSPACE = "config.json";
+// TODO :  think to a better folder and file name
+export const FILE_NAME_IN_WORKSPACE = "config/commity-cfg.json";
 export const COMMITY_MAIN_CMD = "armane-commity.commity";
 export const NO_CONFIG_FOUND_MESSAGE =
   "No custom config found in your project, create one ?";
