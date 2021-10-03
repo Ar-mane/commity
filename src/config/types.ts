@@ -24,3 +24,8 @@ export interface Commit {
   scope: Scope;
   types: Type[];
 }
+
+export interface CommityProject {
+  id: string;
+  useDefaultConfig: string;
+}

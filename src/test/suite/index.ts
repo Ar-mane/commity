@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as Mocha from 'mocha';
 import * as glob from 'glob';
+import { error } from '../../utility/logger';
 
 export function run(): Promise<void> {
 	// Create the mocha test
@@ -30,7 +31,7 @@ export function run(): Promise<void> {
 					}
 				});
 			} catch (err) {
-				console.error(err);
+				error(err);
 				e(err);
 			}
 		});

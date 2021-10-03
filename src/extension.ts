@@ -1,7 +1,7 @@
 import { commands, ExtensionContext } from "vscode";
-import { commity } from "./Commands/MainCommand";
+import { commity } from "./commands/MainCommand";
 import { COMMITY_MAIN_CMD } from "./constants/Constants";
-import { initExtension } from "./UI/Components";
+import { initExtension } from "./ui/Components";
 
 export function activate(context: ExtensionContext) {
   initExtension(context);

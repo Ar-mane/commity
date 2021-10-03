@@ -1,17 +1,13 @@
 import { ExtensionContext, window } from "vscode";
-import { config } from "../config/config";
-import { showNoConfigFileExist } from "../ui/Components";
-import { getCustomConfig, getQuickPickItems } from "../utility/utility";
+import { defaultConfig } from "../config/config";
+import { getProperConfig, getQuickPickItems } from "../utility/utility";
 
 export const commity = async (context: ExtensionContext) => {
   const quickPick = window.createQuickPick();
 
-  const customConfig = await getCustomConfig();
-  if (!customConfig) {
-    showNoConfigFileExist();
-  }
+  const customConfig = await getProperConfig();
 
-  const data = customConfig ?? config;
+  const data = customConfig ?? defaultConfig;
   quickPick.items = getQuickPickItems(data);
   quickPick.show();
 };

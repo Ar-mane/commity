@@ -1,6 +1,6 @@
 import { Config } from "./types";
 
-export const config: Config = {
+export const defaultConfig: Config = {
   emojiVisibility: true,
   scopes: [
     {

@@ -1,8 +1,13 @@
 import { existsSync } from "fs";
 import { posix } from "path";
 import { QuickPickItem, Uri, workspace } from "vscode";
-import { Config, Scope } from "../config/types";
-import { FILE_NAME_IN_WORKSPACE } from "../constants/Constants";
+import { defaultConfig } from "../config/config";
+import { CommityProject, Config, Scope } from "../config/types";
+import {
+  CONFIG_PROJECTS,
+  FILE_NAME_IN_WORKSPACE,
+} from "../constants/Constants";
+import { showNoConfigFileExistPrompt } from "../ui/Components";
 
 export function getQuickPickItems(config: Config): QuickPickItem[] {
   return config.scopes.map(
@@ -14,21 +19,39 @@ export function getQuickPickItems(config: Config): QuickPickItem[] {
   );
 }
 
-export const getCustomConfig = async () => {
-  const configFileURI = getFileUri(FILE_NAME_IN_WORKSPACE);
+export const getProperConfig = async () => {
+  const projectConfigFileUri = getFileUri(FILE_NAME_IN_WORKSPACE);
 
-  const exist = isUriExist(configFileURI as Uri);
-  if (!exist) {
-    return null;
+  const exist = isUriExist(projectConfigFileUri as Uri);
+  const isDefaultSettingSetForThisProject = isDefaultSettingSet();
+
+  if (exist) {
+    return getDataFromUri(projectConfigFileUri as Uri);
+  } else if (isDefaultSettingSetForThisProject) {
+    return defaultConfig;
+  } else {
+    return showNoConfigFileExistPrompt(projectConfigFileUri as Uri);
   }
-  const data = getDataFromUri(configFileURI as Uri);
-  return data;
 };
 
 const getDataFromUri = async (uri: Uri) => {
   const readData = await workspace.fs.readFile(uri);
   const readStr = Buffer.from(readData).toString("utf8");
   return JSON.parse(readStr);
+};
+
+export const getProjects = (): CommityProject[] =>
+  (workspace.getConfiguration().get(CONFIG_PROJECTS) as CommityProject[]) || [];
+
+export const projectID = () => {
+  return workspace.rootPath;
+};
+
+//  --- local functions //
+
+const isDefaultSettingSet = (): boolean => {
+  const pid = projectID();
+  return !!getProjects().find((e) => e.id === pid && e.useDefaultConfig);
 };
 
 const getFileUri = (fileName: string) => {
