@@ -4,5 +4,5 @@ export const log = (message: any, ...items: any): void => {
 };
 export const error = (message: any, ...items: any): void => {
   // replace it by some Logger class
-  error(message, items);
+  console.error(message, items);
 };
