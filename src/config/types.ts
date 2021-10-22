@@ -20,9 +20,11 @@ export interface Scope {
   description: string;
 }
 
-export interface Commit {
-  scope: Scope;
-  types: Type[];
+export interface CommitMessage {
+  scope?: Scope;
+  type?: Type;
+  body?: String;
+  footer?: string;
 }
 
 export interface CommityProject {

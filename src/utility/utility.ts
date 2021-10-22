@@ -2,14 +2,14 @@ import { existsSync } from "fs";
 import { posix } from "path";
 import { QuickPickItem, Uri, workspace } from "vscode";
 import { defaultConfig } from "../config/config";
-import { CommityProject, Config, Scope } from "../config/types";
+import { CommityProject, Config, Scope, Type } from "../config/types";
 import {
   CONFIG_PROJECTS,
   FILE_NAME_IN_WORKSPACE,
 } from "../constants/Constants";
 import { showNoConfigFileExistPrompt } from "../ui/Components";
 
-export function getQuickPickItems(config: Config): QuickPickItem[] {
+export function getScopePickItems(config: Config): QuickPickItem[] {
   return config.scopes.map(
     (item: Scope) =>
       ({
@@ -18,8 +18,17 @@ export function getQuickPickItems(config: Config): QuickPickItem[] {
       } as QuickPickItem)
   );
 }
+export function getTypesPickItems(config: Config): QuickPickItem[] {
+  return config.types.map(
+    (item: Type) =>
+      ({
+        label: createLabelFromType(config, item),
+        description: item.description,
+      } as QuickPickItem)
+  );
+}
 
-export const getProperConfig = async () => {
+export const getProperConfig = async (): Promise<Config> => {
   const projectConfigFileUri = getFileUri(FILE_NAME_IN_WORKSPACE);
 
   const exist = isUriExist(projectConfigFileUri as Uri);
@@ -68,4 +77,8 @@ const getFileUri = (fileName: string) => {
 
 const isUriExist = (uri: Uri): boolean => {
   return existsSync(uri.path);
+};
+
+const createLabelFromType = (config: Config, item: Type): string => {
+  return `${config.emojiVisibility ? item.emoji : ""} ${item.value}`;
 };
